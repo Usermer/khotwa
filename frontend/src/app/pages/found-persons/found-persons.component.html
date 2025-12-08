@@ -1,0 +1,144 @@
+<div class="found-persons-container">
+  <div class="header">
+    <h1>Found Persons</h1>
+    <p>Help reunite these people with their families. If you recognize someone, please contact us.</p>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search by name or description</mat-label>
+      <input matInput [(ngModel)]="searchQuery" (input)="onSearchChange()" placeholder="Enter name or description">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Gender</mat-label>
+      <mat-select [(ngModel)]="selectedGender" (selectionChange)="onFilterChange()">
+        <mat-option value="">All Genders</mat-option>
+        <mat-option value="Male">Male</mat-option>
+        <mat-option value="Female">Female</mat-option>
+        <mat-option value="Other">Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="loadFoundPersons()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  @if (errorMessage) {
+    <div class="error-banner">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading found persons...</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && paginatedPersons.length === 0) {
+    <div class="empty-state">
+      <mat-icon>person_add</mat-icon>
+      <h3>No Found Persons Yet</h3>
+      <p>Try adjusting your search filters</p>
+    </div>
+  }
+
+  <!-- Results Count -->
+  @if (!isLoading && filteredPersons.length > 0) {
+    <div class="results-info">
+      <p>Showing {{ paginatedPersons.length }} of {{ filteredPersons.length }} found persons</p>
+    </div>
+  }
+
+  <!-- Found Persons Grid -->
+  <div class="persons-grid">
+    @for (person of paginatedPersons; track person.id) {
+      <mat-card class="person-card">
+        <!-- Photo -->
+        <div class="card-image">
+          @if (person.photoUrl) {
+            <img [src]="person.photoUrl" alt="{{ person.firstname }} {{ person.lastname }}" />
+          } @else {
+            <div class="no-photo">
+              <mat-icon>person</mat-icon>
+            </div>
+          }
+          <div class="status-badge" [ngClass]="'status-' + person.status.toLowerCase()">
+            {{ person.status }}
+          </div>
+        </div>
+
+        <!-- Card Content -->
+        <mat-card-content>
+          <h3 class="person-name">{{ person.firstname }} {{ person.lastname }}</h3>
+          
+          <div class="person-info">
+            <div class="info-row">
+              <mat-icon>cake</mat-icon>
+              <span>{{ person.age }} years old ({{ getAgeRange(person.age) }})</span>
+            </div>
+
+            <div class="info-row">
+              <mat-icon>wc</mat-icon>
+              <span>{{ person.gender }}</span>
+            </div>
+
+            <div class="info-row">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ person.foundLocation }}</span>
+            </div>
+
+            <div class="info-row">
+              <mat-icon>calendar_today</mat-icon>
+              <span>Found {{ getDaysAgo(person.foundDate) }}</span>
+            </div>
+
+            <div class="description">
+              <p>{{ person.description | slice:0:100 }}...</p>
+            </div>
+
+            @if (person.contactNumber) {
+              <div class="info-row contact">
+                <mat-icon>phone</mat-icon>
+                <span>{{ person.contactNumber }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+
+        <!-- Actions -->
+        <mat-card-actions>
+          <button mat-button color="primary" [routerLink]="['/found', person.id]">
+            <mat-icon>info</mat-icon>
+            View Details
+          </button>
+          <button mat-button>
+            <mat-icon>share</mat-icon>
+            Share
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+
+  <!-- Paginator -->
+  @if (!isLoading && filteredPersons.length > 0) {
+    <mat-paginator
+      [length]="filteredPersons.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[3, 6, 9, 12]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  }
+</div>

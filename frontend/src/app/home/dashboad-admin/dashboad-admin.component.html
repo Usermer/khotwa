@@ -1,0 +1,271 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>
+      <mat-icon>admin_panel_settings</mat-icon>
+      Admin Dashboard
+    </h1>
+</div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search by name</mat-label>
+      <input matInput [(ngModel)]="searchQuery" (input)="onSearchChange()" placeholder="Enter name...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group [(selectedIndex)]="selectedTab" class="dashboard-tabs">
+    
+    <!-- TAB 1: MISSING PERSONS MANAGEMENT -->
+    <mat-tab label="Missing Persons">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">person_search</mat-icon>
+        <span>Missing Persons</span>
+        
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- Status Filter -->
+        <div class="status-filter">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" (selectionChange)="onStatusChange()">
+              <mat-option value="PENDING">
+                <span class="pending-dot"></span>
+                Pending ({{ pendingMissing.length }})
+              </mat-option>
+              <mat-option value="APPROVED">
+                <span class="approved-dot"></span>
+                Approved ({{ approvedMissing.length }})
+              </mat-option>
+              <mat-option value="REJECTED">
+                <span class="rejected-dot"></span>
+                Rejected ({{ rejectedMissing.length }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Loading State -->
+        @if (missingLoading) {
+          <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading missing persons...</p>
+          </div>
+        }
+
+        <!-- Empty State -->
+        @if (!missingLoading && paginatedMissing.length === 0) {
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <h3>No missing persons found</h3>
+            <p>All {{ selectedStatus.toLowerCase() }} reports have been processed</p>
+          </div>
+        }
+
+        <!-- Missing Persons Grid -->
+        <div class="cards-grid">
+          @for (person of paginatedMissing; track person.id) {
+            <mat-card class="report-card">
+              <!-- Card Header -->
+              <div class="card-header">
+                <div class="person-avatar">
+                  @if (person.photoUrl) {
+                    <img [src]="person.photoUrl" alt="Photo" (error)="onImageError($event)" />
+                  } @else {
+                    <mat-icon>person</mat-icon>
+                  }
+                </div>
+                <div class="card-title">
+                  <h3>{{ person.firstname }} {{ person.lastname }}</h3>
+                  <mat-chip [color]="getStatusColor(person.status)" selected>
+                    {{ person.status }}
+                  </mat-chip>
+                </div>
+              </div>
+
+              <!-- Card Content -->
+              <mat-card-content>
+                <div class="person-details">
+                  <div class="detail-item">
+                    <mat-icon>cake</mat-icon>
+                    <span>{{ person.age }} years old</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>wc</mat-icon>
+                    <span>{{ person.gender }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>location_on</mat-icon>
+                    <span>{{ person.lastSeenLocation }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>calendar_today</mat-icon>
+                    <span>Last seen {{ getDaysAgo(person.lastSeenDate) }}</span>
+                  </div>
+                </div>
+
+                <div class="description">
+                  <p>{{ person.description }}</p>
+                </div>
+              </mat-card-content>
+
+              <!-- Card Actions -->
+              <mat-card-actions>
+                @if (selectedStatus === 'PENDING') {
+                  <button mat-raised-button color="accent" (click)="approveMissing(person.id)">
+                    <mat-icon>check_circle</mat-icon>
+                    Approve
+                  </button>
+                  <button mat-raised-button color="warn" (click)="rejectMissing(person.id)">
+                    <mat-icon>cancel</mat-icon>
+                    Reject
+                  </button>
+                }
+
+                @if (selectedStatus !== 'PENDING') {
+                  <button mat-button color="primary">
+                    <mat-icon>info</mat-icon>
+                    View Details
+                  </button>
+                }
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+
+        <!-- Paginator -->
+        @if (!missingLoading && paginatedMissing.length > 0) {
+          <mat-paginator
+            [length]="filteredMissing.length"
+            [pageSize]="missingPageSize"
+            [pageSizeOptions]="[5, 10, 15, 20]"
+            (page)="onMissingPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- TAB 2: FOUND PERSONS -->
+    <mat-tab label="Found Persons">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">person_add</mat-icon>
+        <span>Found Persons</span>
+        <span matBadge="0" matBadgeColor="accent" class="badge-count"></span>
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- Loading State -->
+        @if (foundLoading) {
+          <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading found persons...</p>
+          </div>
+        }
+
+        <!-- Empty State -->
+        @if (!foundLoading && paginatedFound.length === 0) {
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <h3>No found persons reported</h3>
+            <p>All found persons have been identified or processed</p>
+          </div>
+        }
+
+        <!-- Found Persons Grid -->
+        <div class="cards-grid">
+          @for (person of paginatedFound; track person.id) {
+            <mat-card class="report-card found">
+              <!-- Card Header -->
+              <div class="card-header">
+                <div class="person-avatar">
+                  @if (person.photoUrl) {
+                    <img [src]="person.photoUrl" alt="Photo" />
+                  } @else {
+                    <mat-icon>person</mat-icon>
+                  }
+                </div>
+                <div class="card-title">
+                  <h3>{{ person.firstname }} {{ person.lastname }}</h3>
+                  <mat-chip [color]="getStatusColor(person.status)" selected>
+                    {{ person.status }}
+                  </mat-chip>
+                </div>
+              </div>
+
+              <!-- Card Content -->
+              <mat-card-content>
+                <div class="person-details">
+                  <div class="detail-item">
+                    <mat-icon>cake</mat-icon>
+                    <span>{{ person.age }} years old</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>wc</mat-icon>
+                    <span>{{ person.gender }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>location_on</mat-icon>
+                    <span>Found at {{ person.foundLocation }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>calendar_today</mat-icon>
+                    <span>Found {{ getDaysAgo(person.foundDate) }}</span>
+                  </div>
+                </div>
+
+                <div class="description">
+                  <p>{{ person.description }}</p>
+                </div>
+              </mat-card-content>
+
+              <!-- Card Actions -->
+              <mat-card-actions>
+                <button mat-button color="primary">
+                  <mat-icon>search</mat-icon>
+                  Find Matches
+                </button>
+                <button mat-button color="accent">
+                  <mat-icon>info</mat-icon>
+                  View Details
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+
+        <!-- Paginator -->
+        @if (!foundLoading && paginatedFound.length > 0) {
+          <mat-paginator
+            [length]="filteredFound.length"
+            [pageSize]="foundPageSize"
+            [pageSizeOptions]="[5, 10, 15, 20]"
+            (page)="onFoundPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- TAB 3: FIND MATCHES -->
+    <mat-tab label="Find Matches">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">match_case</mat-icon>
+        <span>Matches</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <div class="empty-state">
+          <mat-icon>pending_actions</mat-icon>
+          <h3>Face Matching Feature</h3>
+          <p>Coming soon - AI-powered face matching to connect missing and found persons</p>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

@@ -1,0 +1,236 @@
+# ===== GENERAL =====
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ===== BACKEND - SPRING BOOT / MAVEN =====
+
+# Maven (exclude only compiled output, NOT source)
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+.m2repository/
+
+# Spring Boot
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+.springBeans
+.sts4-cache/
+spring-boot-devtools.properties
+
+# Gradle (if used)
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
+.gradle/
+gradle-app.setting
+gradlew
+gradlew.bat
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+logs/
+*.log.gz
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs
+hs_err_pid*
+replay.pid
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+# NetBeans
+nbproject/
+nbbuild/
+dist/
+build/
+
+# ===== FRONTEND - ANGULAR / NODE =====
+
+# Dependencies (exclude node_modules only, keep source)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Angular compiled output only
+dist/
+.angular/
+*.ng.*.ts
+# DO NOT EXCLUDE: .angular.json, angular.json, tsconfig.json
+
+# Compiled output
+.next/
+out/
+
+# IDEs and editors
+.vscode/*
+!.vscode/extensions.json
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/.history/*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Emacs
+*~
+*#
+
+# System Files
+.AppleDouble
+.LSOverride
+
+# ===== PROJECT SPECIFIC =====
+
+# Uploads folder (optionnel - peut être inclus selon les besoins)
+uploads/
+uploads/**/*
+!uploads/.gitkeep
+
+# Environment files (À inclure dans .env.example au lieu de .env)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Configuration files with sensitive data
+application.properties
+application-prod.properties
+application-dev.properties
+google-cloud-key.json
+secrets.yml
+
+# Database backups
+*.sql
+*.dump
+*.bak
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.netbeans/
+.nb-gradle/
+.sublime-text-3/
+
+# ===== BUILD ARTIFACTS =====
+dist/
+build/
+target/
+.cache/
+.parcel-cache/
+.next/
+out/
+
+# ===== TESTING =====
+coverage/
+.nyc_output/
+.jest/
+junit.xml
+test-results/
+
+# ===== DOCUMENTATION =====
+docs/generated/
+docs/build/
+
+# ===== TEMPORARY FILES =====
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ===== COMPILED FILES =====
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# ===== ARCHIVES =====
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ===== IDE ARTIFACTS =====
+*.stackdump
+.vscode-test
+.nyc_output
+coverage
+*.lcov
+
+# ===== DIST FOLDER (Frontend) =====
+# Uncomment if you want to exclude dist/ from version control
+# dist/
+# build/

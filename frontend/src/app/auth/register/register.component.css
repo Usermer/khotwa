@@ -1,0 +1,336 @@
+/* Register Container */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Register Card - Two Columns Layout */
+.register-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 1000px;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Left Column: Image */
+.register-image {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.image-overlay h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  letter-spacing: -1px;
+}
+
+.image-overlay p {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Right Column: Form Wrapper */
+.register-form-wrapper {
+  background: white;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Header */
+.register-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.register-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.5px;
+}
+
+.register-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Form */
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Form Row */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+/* Form Field */
+.form-field {
+  width: 100%;
+  margin-bottom: 0.8rem;
+}
+
+/* Material Overrides */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field-error {
+  font-size: 0.85rem !important;
+  color: #dc2626 !important;
+}
+
+::ng-deep .mat-mdc-form-field-hint {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* Alert Messages */
+.alert {
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-left: 4px solid #dc2626;
+}
+
+.alert-success {
+  background: #dcfce7;
+  color: #166534;
+  border-left: 4px solid #16a34a;
+}
+
+.alert-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Terms Checkbox */
+.terms-checkbox {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkbox-error {
+  font-size: 0.85rem;
+  color: #dc2626 !important;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  height: 44px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-top: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Spinner */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.2rem 0 0.8rem 0;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+/* Google Button */
+.btn-google {
+  padding:10px;
+  border: 1px solid #d1d5db;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* Footer */
+.auth-footer {
+  text-align: center;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.auth-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.auth-link:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .register-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .register-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 0.5rem;
+  }
+
+  .register-card {
+    grid-template-columns: 1fr;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .register-image {
+    display: none;
+  }
+
+  .register-form-wrapper {
+    padding: 1.5rem 1rem;
+  }
+
+  .register-title {
+    font-size: 1.35rem;
+  }
+
+  .register-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .btn-submit {
+    height: 44px;
+    font-size: 0.95rem;
+  }
+}

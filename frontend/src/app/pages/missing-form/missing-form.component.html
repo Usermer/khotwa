@@ -1,0 +1,218 @@
+<div class="missing-form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>Report a Missing Person</h1>
+      <p>Help us find this person by providing accurate information</p>
+    </div>
+
+    <!-- Success Message -->
+    @if (successMessage) {
+    <div class="alert alert-success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ successMessage }}</span>
+    </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+    <div class="alert alert-error">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+
+    <form [formGroup]="missingForm" (ngSubmit)="onSubmit()">
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <mat-icon>person</mat-icon>
+          Personal Information
+        </h2>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstname" placeholder="Enter first name" />
+            @if (missingForm.get('firstname')?.hasError('required') && missingForm.get('firstname')?.touched) {
+            <mat-error>First name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastname" placeholder="Enter last name" />
+            @if (missingForm.get('lastname')?.hasError('required') && missingForm.get('lastname')?.touched) {
+            <mat-error>Last name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Age</mat-label>
+            <input matInput formControlName="age" type="number" placeholder="Enter age" />
+            @if (missingForm.get('age')?.hasError('required') && missingForm.get('age')?.touched) {
+            <mat-error>Age is required</mat-error>
+            }
+            @if ((missingForm.get('age')?.hasError('min') || missingForm.get('age')?.hasError('max')) && missingForm.get('age')?.touched) {
+            <mat-error>Age must be between 0 and 150</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option>-- Select --</mat-option>
+              @for (option of genderOptions; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+              }
+            </mat-select>
+            @if (missingForm.get('gender')?.hasError('required') && missingForm.get('gender')?.touched) {
+            <mat-error>Gender is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="form-field full-width" appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" placeholder="Describe the person (hair color, distinctive marks, clothing, etc.)" rows="4"></textarea>
+          @if (missingForm.get('description')?.hasError('required') && missingForm.get('description')?.touched) {
+          <mat-error>Description is required</mat-error>
+          }
+          @if (missingForm.get('description')?.hasError('minlength') && missingForm.get('description')?.touched) {
+          <mat-error>Description must be at least 10 characters</mat-error>
+          }
+        </mat-form-field>
+
+        
+
+        <!-- Photo Upload Section -->
+        <div class="photo-upload-section">
+          <h3>Upload Photo </h3>
+          <div class="upload-area">
+            <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+            <button type="button" mat-stroked-button (click)="fileInput.click()" class="upload-button">
+              <mat-icon>cloud_upload</mat-icon>
+              Choose Photo
+            </button>
+            <p class="upload-hint">PNG, JPG, GIF - Max 5MB</p>
+          </div>
+
+          @if (selectedFile) {
+          <div class="file-info">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{ selectedFile.name }}</span>
+            <button type="button" mat-icon-button (click)="selectedFile = null; filePreview = null" class="remove-button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          }
+
+          @if (filePreview) {
+          <div class="image-preview">
+            <img [src]="filePreview" alt="Preview" />
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Last Seen Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <mat-icon>location_on</mat-icon>
+          Last Seen Information
+        </h2>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Date Last Seen</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="lastSeenDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (missingForm.get('lastSeenDate')?.hasError('required') && missingForm.get('lastSeenDate')?.touched) {
+            <mat-error>Date is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Location Last Seen</mat-label>
+            <input matInput formControlName="lastSeenLocation" placeholder="City, area or specific location" />
+            @if (missingForm.get('lastSeenLocation')?.hasError('required') && missingForm.get('lastSeenLocation')?.touched) {
+            <mat-error>Location is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="form-field full-width" appearance="outline">
+          <mat-label>Current/Last Known Address</mat-label>
+          <textarea matInput formControlName="address" placeholder="Detailed address" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Contact Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <mat-icon>phone</mat-icon>
+          Contact Information
+        </h2>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Relationship</mat-label>
+            <mat-select formControlName="relationship">
+              <mat-option>-- Select --</mat-option>
+              @for (option of relationshipOptions; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+              }
+            </mat-select>
+            @if (missingForm.get('relationship')?.hasError('required') && missingForm.get('relationship')?.touched) {
+            <mat-error>Relationship is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="contactNumber" type="tel" placeholder="Phone number" />
+            @if (missingForm.get('contactNumber')?.hasError('required') && missingForm.get('contactNumber')?.touched) {
+            <mat-error>Phone number is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="form-field full-width" appearance="outline">
+          <mat-label>Contact Email</mat-label>
+          <input matInput formControlName="contactEmail" type="email" placeholder="your.email@example.com" />
+          @if (missingForm.get('contactEmail')?.hasError('required') && missingForm.get('contactEmail')?.touched) {
+          <mat-error>Email is required</mat-error>
+          }
+          @if (missingForm.get('contactEmail')?.hasError('email') && missingForm.get('contactEmail')?.touched) {
+          <mat-error>Enter a valid email address</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="missingForm.reset()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          Reset
+        </button>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="missingForm.invalid || isLoading">
+          @if (isLoading) {
+          <mat-icon class="spinner">hourglass_empty</mat-icon>
+          <span>Submitting...</span>
+          } @else {
+          <mat-icon>send</mat-icon>
+          <span>Submit Report</span>
+          }
+        </button>
+      </div>
+
+      <p class="form-note">
+        <mat-icon>info</mat-icon>
+        Your report will be reviewed by our team. You will receive updates via email.
+      </p>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,209 @@
+<div class="found-form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>Report a Found Person</h1>
+      <p>Help us reunite this person with their family by providing accurate information</p>
+    </div>
+
+    <!-- Success Message -->
+    @if (successMessage) {
+    <div class="alert alert-success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ successMessage }}</span>
+    </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+    <div class="alert alert-error">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+
+    <form [formGroup]="foundForm" (ngSubmit)="onSubmit()">
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <mat-icon>person</mat-icon>
+          Personal Information
+        </h2>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstname" placeholder="Enter first name" />
+            @if (foundForm.get('firstname')?.hasError('required') && foundForm.get('firstname')?.touched) {
+            <mat-error>First name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastname" placeholder="Enter last name" />
+            @if (foundForm.get('lastname')?.hasError('required') && foundForm.get('lastname')?.touched) {
+            <mat-error>Last name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Age</mat-label>
+            <input matInput formControlName="age" type="number" placeholder="Enter age" />
+            @if (foundForm.get('age')?.hasError('required') && foundForm.get('age')?.touched) {
+            <mat-error>Age is required</mat-error>
+            }
+            @if ((foundForm.get('age')?.hasError('min') || foundForm.get('age')?.hasError('max')) && foundForm.get('age')?.touched) {
+            <mat-error>Age must be between 0 and 150</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option>-- Select --</mat-option>
+              @for (option of genderOptions; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+              }
+            </mat-select>
+            @if (foundForm.get('gender')?.hasError('required') && foundForm.get('gender')?.touched) {
+            <mat-error>Gender is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="form-field full-width" appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" placeholder="Describe the person (hair color, distinctive marks, clothing, etc.)" rows="4"></textarea>
+          @if (foundForm.get('description')?.hasError('required') && foundForm.get('description')?.touched) {
+          <mat-error>Description is required</mat-error>
+          }
+          @if (foundForm.get('description')?.hasError('minlength') && foundForm.get('description')?.touched) {
+          <mat-error>Description must be at least 10 characters</mat-error>
+          }
+        </mat-form-field>
+
+        
+        <!-- Photo Upload Section -->
+        <div class="photo-upload-section">
+          <label class="photo-upload-label">
+            <mat-icon class="upload-icon">cloud_upload</mat-icon>
+            <span>Upload Photo (optional)</span>
+            <input
+              type="file"
+              class="file-input"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              hidden
+            />
+          </label>
+          @if (filePreview) {
+          <div class="photo-preview-container">
+            <div class="photo-preview">
+              <img [src]="filePreview" alt="Photo preview" class="preview-image" />
+              <button
+                type="button"
+                class="remove-photo-btn"
+                (click)="removePhoto()"
+                mat-icon-button
+                matTooltip="Remove photo"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Found Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <mat-icon>location_on</mat-icon>
+          Found Information
+        </h2>
+
+        <div class="form-row">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Date Found</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="foundDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (foundForm.get('foundDate')?.hasError('required') && foundForm.get('foundDate')?.touched) {
+            <mat-error>Date is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Location Found</mat-label>
+            <input matInput formControlName="foundLocation" placeholder="City, area or specific location" />
+            @if (foundForm.get('foundLocation')?.hasError('required') && foundForm.get('foundLocation')?.touched) {
+            <mat-error>Location is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Contact Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <mat-icon>phone</mat-icon>
+          Your Contact Information
+        </h2>
+
+        <div class="form-row">
+         
+            <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="contactNumber" type="tel" placeholder="Phone number" />
+            @if (foundForm.get('contactNumber')?.hasError('required') && foundForm.get('contactNumber')?.touched) {
+            <mat-error>Phone number is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Contact Name</mat-label>
+            <input matInput formControlName="contactName" type="text" placeholder="Contact name" />
+            @if (foundForm.get('contactName')?.hasError('required') && foundForm.get('contactName')?.touched) {
+            <mat-error>Contact name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="form-field full-width" appearance="outline">
+          <mat-label>Contact Email</mat-label>
+          <input matInput formControlName="contactEmail" type="email" placeholder="your.email@example.com" />
+          @if (foundForm.get('contactEmail')?.hasError('required') && foundForm.get('contactEmail')?.touched) {
+          <mat-error>Email is required</mat-error>
+          }
+          @if (foundForm.get('contactEmail')?.hasError('email') && foundForm.get('contactEmail')?.touched) {
+          <mat-error>Enter a valid email address</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="foundForm.reset()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          Reset
+        </button>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="foundForm.invalid || isLoading">
+          @if (isLoading) {
+          <mat-icon class="spinner">hourglass_empty</mat-icon>
+          <span>Submitting...</span>
+          } @else {
+          <mat-icon>send</mat-icon>
+          <span>Submit Report</span>
+          }
+        </button>
+      </div>
+
+      <p class="form-note">
+        <mat-icon>info</mat-icon>
+        Your report will help us reunite this person with their family. Thank you for your help!
+      </p>
+    </form>
+  </div>
+</div>
