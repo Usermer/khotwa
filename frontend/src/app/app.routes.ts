@@ -8,6 +8,7 @@ import { FoundFormComponent } from './pages/found-form/found-form.component';
 import { MissingPersonsComponent } from './pages/missing-persons/missing-persons.component';
 import { FoundPersonsComponent } from './pages/found-persons/found-persons.component';
 import { DashboadAdminComponent } from './home/dashboad-admin/dashboad-admin.component';
+
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -19,7 +20,7 @@ export const routes: Routes = [
   
   { path: 'user-page', component: UserPageComponent },
   { path: 'dashboard', component: DashboadAdminComponent, canActivate: [AuthGuard] },
-  
+
   // Report Forms - Protected Routes
   { path: 'report/missing', component: MissingFormComponent, canActivate: [AuthGuard] },
   { path: 'report/found', component: FoundFormComponent, canActivate: [AuthGuard] },

@@ -10,6 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
 import { MissingService } from '../../services/missing.service';
 
@@ -20,7 +22,7 @@ import { MissingService } from '../../services/missing.service';
     CommonModule, FormsModule, RouterModule,
     MatCardModule, MatButtonModule, MatIconModule, MatInputModule,
     MatFormFieldModule, MatSelectModule, MatChipsModule,
-    MatProgressSpinnerModule, MatPaginatorModule
+    MatProgressSpinnerModule, MatPaginatorModule, MatMenuModule, MatDividerModule
   ],
   templateUrl: './missing-persons.component.html',
   styleUrl: './missing-persons.component.css'
@@ -146,6 +148,44 @@ onImageError(person: any): void {
   console.error(' Image failed to load for:', person.firstname);
   console.error('Tried URL:', this.getImageUrl(person.photoUrl));
 }
+
+// Méthodes de partage social
+sharePerson(person: any): void {
+  const message = `Help find ${person.firstname} ${person.lastname}! Missing since ${person.lastSeenDate} from ${person.lastSeenLocation}. If you have information, please contact: ${person.contactNumber}`;
+  const personUrl = `${window.location.origin}/missing/${person.id}`;
+  
+  this.shareOnFacebook(personUrl);
+}
+
+shareOnFacebook(url: string): void {
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  window.open(facebookUrl, '_blank', 'width=600,height=400');
+}
+
+shareOnTwitter(person: any): void {
+  const message = `Help find ${person.firstname} ${person.lastname}! Missing since ${person.lastSeenDate} from ${person.lastSeenLocation}`;
+  const url = `${window.location.origin}/missing/${person.id}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(url)}`;
+  window.open(twitterUrl, '_blank', 'width=600,height=400');
+}
+
+shareOnWhatsApp(person: any): void {
+  const message = `Help find ${person.firstname} ${person.lastname}! Missing since ${person.lastSeenDate} from ${person.lastSeenLocation}. Contact: ${person.contactNumber}. More info: ${window.location.origin}/missing/${person.id}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+}
+
+shareOnLinkedIn(person: any): void {
+  const url = `${window.location.origin}/missing/${person.id}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+  window.open(linkedinUrl, '_blank', 'width=600,height=400');
+}
+
+shareViaEmail(person: any): void {
+  const subject = `Help find ${person.firstname} ${person.lastname}`;
+  const body = `Help us find ${person.firstname} ${person.lastname}!\n\nMissing since: ${person.lastSeenDate}\nLast seen: ${person.lastSeenLocation}\nContact: ${person.contactNumber}\n\nMore information: ${window.location.origin}/missing/${person.id}\n\nPlease share this information if you have any details.`;
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 }
 //etape1:upload de l'image
 //on l'envoie au backend
@@ -153,4 +193,4 @@ onImageError(person: any): void {
 //(controller)stocke dans la base de donnees
 //frontend:recupere l'image du backend
 //transforme l'utl (localhost:8080/api/files/download/missing-persons/nomdufichier)
-//affiche l'image dans le component
+//affiche l'image dans le componentWorking

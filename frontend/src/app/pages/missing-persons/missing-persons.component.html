@@ -123,10 +123,35 @@
             <mat-icon>info</mat-icon>
             View Details
           </button>
-          <button mat-button>
+          
+          <!-- Share Menu -->
+          <button mat-button [matMenuTriggerFor]="shareMenu">
             <mat-icon>share</mat-icon>
             Share
           </button>
+          <mat-menu #shareMenu="matMenu">
+            <button mat-menu-item (click)="shareOnFacebook(person)">
+              <mat-icon>share</mat-icon>
+              <span>Facebook</span>
+            </button>
+            <button mat-menu-item (click)="shareOnTwitter(person)">
+              <mat-icon>share</mat-icon>
+              <span>Twitter</span>
+            </button>
+            <button mat-menu-item (click)="shareOnWhatsApp(person)">
+              <mat-icon>share</mat-icon>
+              <span>WhatsApp</span>
+            </button>
+            <button mat-menu-item (click)="shareOnLinkedIn(person)">
+              <mat-icon>share</mat-icon>
+              <span>LinkedIn</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="shareViaEmail(person)">
+              <mat-icon>email</mat-icon>
+              <span>Email</span>
+            </button>
+          </mat-menu>
         </mat-card-actions>
       </mat-card>
     }
